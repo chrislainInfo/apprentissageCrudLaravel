@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use App\Models\Todo;
 
 class TestController extends Controller
 {
@@ -19,10 +20,20 @@ class TestController extends Controller
     
 
     public function liste(){
-        return view('page.liste');
+
+        $donnee = Todo::all();
+
+        return view('page.liste', ['donnes' => $donnee]);
     }
 
     public function save_todo(Request $r){
-        dd($r);
+        
+        $result = $r->validate([
+            'libelle' => 'required'
+        ]);
+
+        Todo::create($result);
+
+        return redirect()->back()->with('success', 'Tache enregistré avec succès !');
     }
 }
