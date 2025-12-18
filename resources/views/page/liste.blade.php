@@ -9,8 +9,12 @@
 @endif
 
 <h1>Liste des données</h1>
-
-<table>
+ @if(session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+<table class="table">
     <thead>
         <tr>
             <th>ID</th>
@@ -18,10 +22,14 @@
         </tr>
     </thead>
     <tbody>
-        @foreach($donnes as $item)
+        @foreach($donnee as $item)
             <tr>
                 <td>{{ $item->id }}</td>
                 <td>{{ $item->libelle }}</td>
+                <td>
+                    <a href="{{ route('liste.edit', $item->id) }}" class="btn btn-warning" target="_blank">Modifier</a>
+                    <a href="{{ route('liste.show', $item->id) }}" class="btn btn-danger">Supprimer</a>
+                </td>
             </tr>
         @endforeach
     </tbody>

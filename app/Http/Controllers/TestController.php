@@ -21,19 +21,74 @@ class TestController extends Controller
 
     public function liste(){
 
-        $donnee = Todo::all();
+        $donnee = Todo::all('id','libelle', 'description');
+        // dd($donnee);
+        // $donnee = Todo::get();
 
-        return view('page.liste', ['donnes' => $donnee]);
+        return view('page.liste', compact('donnee'));
+    }
+
+    public function editList ($id) {
+        // $data = Todo::find($id);
+        // $data = Todo::findOrFail($id);
+        $data = Todo::where('id', $id)->first();
+        // dd($data);
+
+        if (!$data) {
+            return back()->with('error', 'todo non trouve');
+        }
+        
+        return view('page.editList', compact('data'));
+    }
+
+    public function showList ($id) {
+        $data = Todo::where('id', $id)->first();
+
+        if (!$data) {
+            return back()->with('error', 'todo non trouve');
+        }
+        
+        return view('page.show', compact('data'));
+    }
+    public function delete ($id) {
+        $data = Todo::where('id', $id)->delete();
+
+        // if (!$data) {
+        //     return back()->with('error', 'todo non trouve');
+        // }
+        
+        return redirect()->route('listes')->with('success', 'tache supprimee');
+    }
+
+    public function updateList (Request $r, $id) {
+         $result = $r->validate([
+            'libelle' => 'required|max:25|min:1', 'description' => 'nullable'
+        ]);
+
+        Todo::where('id', $id)->update([
+            'libelle' => $result['libelle'],
+            'description' => $result['description']
+        ]);
+        
+        return redirect()->route('listes')->with('success', 'tache modifie');
     }
 
     public function save_todo(Request $r){
-        
         $result = $r->validate([
-            'libelle' => 'required'
+            'libelle' => 'required|max:25|min:1', 'description' => 'nullable'
+        ]);
+        // $enregistrement = new Todo();
+
+        // $enregistrement->libelle = $r->libelle;
+        // $enregistrement->description = $r->description;
+        // $enregistrement->save();
+
+        Todo::create([
+            'libelle' => $r->libelle,
+            'description' => $r->description
         ]);
 
-        Todo::create($result);
 
-        return redirect()->back()->with('success', 'Tache enregistré avec succès !');
+        return back()->with('success', 'Tache enregistré avec succès !');
     }
 }

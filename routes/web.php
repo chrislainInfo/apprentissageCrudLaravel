@@ -20,5 +20,14 @@ Route ::post('/liste', [TestController::class, 'liste'])
 Route ::post('/save', [TestController::class, 'save_todo'])
 ->name('send_todo');
 
+Route::get('/editTodo/{id}', [TestController::class, 'editList'] )->name('liste.edit');
+Route::post('/editTodo/{id}', [TestController::class, 'updateList'] )->name('liste.edit');
+
+Route::get('/showTodo/{id}', [TestController::class, 'showList'])->name('liste.show');
+Route::get('/deleteTodo/{id}', [TestController::class, 'delete'])->name('liste.delete');
+Route::post('/deleteTodo/{id}', [TestController::class, 'delete'])->name('liste.delete');
+
+
+
 
 

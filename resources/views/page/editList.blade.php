@@ -1,11 +1,13 @@
 @extends('layout.template_form')
 
-@section('title','Formulaire tdo')
-@section('title_content','Formulaire save')
+@section('title','Mise a jour de la tache'.$data->libelle)
+@section('title_content')
+    Formulaire de mis a jour de la tache <span class="text-success">{{$data->libelle}}</span>
+@endsection
 
 @section('content')
 
-<form method="POST" action="{{ route('send_todo') }}">
+<form method="POST" action="{{ route('liste.edit', $data->id) }}">
     @csrf
     <div class="row">
         <div class="col-md-6">
@@ -14,9 +16,11 @@
                     {{ session('success') }}
                 </div>
             @endif
+
+            
             <div class="form-group">
-                <input class="form-control" type="text" name="libelle">
-                <input class="form-control" type="text" name="description">
+                <input class="form-control" type="text" name="libelle" value="{{$data->libelle}}">
+                <input class="form-control" type="text" name="description" value="{{$data->description}}">
                 <span class="form-label text-black">Task</span>
             </div>
             @error('libelle')
